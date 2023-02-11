@@ -33,13 +33,25 @@ if __name__ == '__main__':
 
     pool_obj = multiprocessing.Pool()
 
-    cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
-    cursor = cnx.cursor()
-    add_block = ("INSERT INTO block (block_height, time, day_uniq_value, month_uniq_value, year_uniq_value, turnover_value) VALUES (%s, %s, %s, %s, %s, %s)")
+    cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40',
+                                  database='emailamuli_bc')
+    cursor = cnx.cursor(buffered=True)
+
+    query = ("SELECT * FROM block WHERE block_height=%s")
+    add_block = ("INSERT INTO block (block_height, time) VALUES (%s, %s)")
+    update_block = ("UPDATE block SET day_uniq_value = %s, month_uniq_value = %s, year_uniq_value = %s, turnover_value = %s WHERE block_height = %s")
 
     for block_height in range(start_block, end_block - 1, -1):
+        cursor.execute(query, (str(block_height),))
+        if cursor.rowcount > 0:
+            continue
+
         block = bc.get_block(block_height)
         block_date = bc.get_block_date(block)
+
+        cursor.execute(add_block, (block_height, block_date))
+        cnx.commit()
+
         print(str(block_height) + "  Block time: " + str(block_date) + "  Now: " + str(datetime.datetime.now()))
 
         collect_day_uniq_value = 0.0
@@ -55,10 +67,9 @@ if __name__ == '__main__':
             collect_year_uniq_value += year_uniq_value
             collect_turnover_value += turnover_value
 
-        data_block = (block_height, block_date, collect_day_uniq_value, collect_month_uniq_value, collect_year_uniq_value, collect_turnover_value)
-        cursor.execute(add_block, data_block)
+        data_block = (collect_day_uniq_value, collect_month_uniq_value, collect_year_uniq_value, collect_turnover_value, block_height)
+        cursor.execute(update_block, data_block)
         cnx.commit()
-
 
     cursor.close()
     cnx.close()
