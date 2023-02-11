@@ -1,3 +1,5 @@
+import datetime
+import json
 from include.bc import BC
 import multiprocessing
 from pathlib import Path
@@ -39,12 +41,15 @@ if __name__ == '__main__':
     start_block = 774502  # 2023-01-31 23:58:16 last december block
     end_block = 716583  # 2022-01-01 00:13:32 start 2022
     result_data = dict()
+    # with open('result_data.json', 'r') as data:
+    #     result_data = json.loads(data.readline())
+
     pool_obj = multiprocessing.Pool()
 
     for block_height in range(start_block, end_block - 1, -1):
-        print(block_height)
         block = bc.get_block(block_height)
         block_date = bc.get_block_date(block)
+        print(str(block_height) + "  Block time: " + str(block_date) + "  Now: " + str(datetime.datetime.now()))
         create_date(result_data, block_date)
 
         # main multi process loop
@@ -63,4 +68,7 @@ if __name__ == '__main__':
             print("result_data don't exist")
 
         with open('result_data.json', 'w') as data:
-            data.write(str(result_data))
+            data.write(json.dumps(result_data))
+
+        with open('block_id', 'w') as data:
+            data.write(str(block_height))
