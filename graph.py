@@ -34,9 +34,8 @@ for (id, block_height, time, day_uniq_value, month_uniq_value, year_uniq_value, 
     list_turnover_value[index] += turnover_value
 
 dates = matplotlib.dates.date2num(list_time)
-matplotlib.pyplot.plot_date(dates, list_turnover_value)
-plt.plot(dates, list_turnover_value)
-matplotlib.pyplot.plot_date(dates, list_day_uniq_value)
-plt.plot(dates, list_day_uniq_value)
-#plt.gcf().autofmt_xdate()
+matplotlib.pyplot.title("Day uniq and turnover values")
+matplotlib.pyplot.plot_date(dates, list_day_uniq_value, 'g', linestyle="-")
+matplotlib.pyplot.plot_date(dates, list_turnover_value, 'g', linestyle="--", color="red")
+#matplotlib.pyplot.yscale("log")
 plt.show()
