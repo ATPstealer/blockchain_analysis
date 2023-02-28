@@ -73,13 +73,18 @@ if __name__ == '__main__':
             collect_turnover_value += turnover_value
 
         # Save block data
-        try:
-            cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
-            cursor = cnx.cursor(buffered=True)
-            data_block = (collect_day_uniq_value, collect_month_uniq_value, collect_year_uniq_value, collect_turnover_value, block_height)
-            cursor.execute(update_block, data_block)
-            cnx.commit()
-            cursor.close()
-            cnx.close()
-        except mysql.connector.Error as err:
-            print("Something went wrong: {}".format(err))
+        for _ in range(0, 10):
+            try:
+                cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
+                cursor = cnx.cursor(buffered=True)
+                data_block = (collect_day_uniq_value, collect_month_uniq_value, collect_year_uniq_value, collect_turnover_value, block_height)
+                cursor.execute(update_block, data_block)
+                cnx.commit()
+                cursor.close()
+                cnx.close()
+            except mysql.connector.Error as err:
+                print("Something went wrong: {}".format(err))
+                continue
+            else:
+                break
+

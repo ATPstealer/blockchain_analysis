@@ -49,14 +49,25 @@ for (id, block_height, time, day_uniq_value, month_uniq_value, year_uniq_value, 
     index = list_year_time.index(year)
     list_year_uniq_value[index] += year_uniq_value
 
-print(list_year_time)
-print(list_year_uniq_value)
+for index in range(0, len(list_day_uniq_value)):
+    if list_day_uniq_value[index] > 40000000:
+        print(str(list_time[index]) + " " + str(list_day_uniq_value[index]))
 
 dates = matplotlib.dates.date2num(list_time)
-matplotlib.pyplot.title("Day uniq and turnover values")
-#matplotlib.pyplot.plot_date(dates, list_day_uniq_value, 'g', linestyle="-")
-matplotlib.pyplot.plot_date(dates, list_turnover_value, 'g', linestyle="--", color="red")
-#matplotlib.pyplot.yscale("log")
+fig, ax1 = plt.subplots()
+#ax2 = ax1.twinx()
+plt.title("Day uniq and turnover values")
+ax1.plot_date(dates, list_day_uniq_value, markersize=2, color="green")
+#ax2.plot_date(dates, list_turnover_value, markersize=2, color="red")
+ax1.set_ylabel("Uniq Green")
+#ax2.set_ylabel("Turnover")
+# matplotlib.pyplot.yscale("log")
+plt.show()
+
+dates = matplotlib.dates.date2num(list_time)
+fig, ax1 = plt.subplots()
+plt.title("Day uniq and turnover values")
+ax1.plot_date(dates, list_turnover_value, markersize=2, color="red")
 plt.show()
 
 dates = matplotlib.dates.date2num(list_month_time)
