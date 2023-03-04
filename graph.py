@@ -53,27 +53,49 @@ for index in range(0, len(list_day_uniq_value)):
     if list_day_uniq_value[index] > 40000000:
         print(str(list_time[index]) + " " + str(list_day_uniq_value[index]))
 
+query = ("SELECT * FROM price order by date")
+try:
+    cursor.execute(query, ())
+except mysql.connector.Error as err:
+    print("Something went wrong: {}".format(err))
+
+list_price_time = list()
+list_price = list()
+for (id, date, price) in cursor:
+    list_price_time.append(date)
+    list_price.append(price)
+
 dates = matplotlib.dates.date2num(list_time)
 fig, ax1 = plt.subplots()
-#ax2 = ax1.twinx()
-plt.title("Day uniq and turnover values")
-ax1.plot_date(dates, list_day_uniq_value, markersize=2, color="green")
-#ax2.plot_date(dates, list_turnover_value, markersize=2, color="red")
+ax2 = ax1.twinx()
+plt.title("Day uniq  values")
+ax1.plot_date(dates, list_day_uniq_value, markersize=1, color="green")
+ax2.plot_date(list_price_time, list_price, 'r')
 ax1.set_ylabel("Uniq Green")
-#ax2.set_ylabel("Turnover")
+ax2.set_ylabel("Price")
 # matplotlib.pyplot.yscale("log")
 plt.show()
 
 dates = matplotlib.dates.date2num(list_time)
 fig, ax1 = plt.subplots()
-plt.title("Day uniq and turnover values")
-ax1.plot_date(dates, list_turnover_value, markersize=2, color="red")
+ax2 = ax1.twinx()
+plt.title("Day turnover")
+ax1.plot_date(dates, list_turnover_value, markersize=2, color="green")
+ax2.plot_date(list_price_time, list_price, 'r')
+ax1.set_ylabel("Turnover green points")
+ax2.set_ylabel("Price")
 plt.show()
 
 dates = matplotlib.dates.date2num(list_month_time)
-matplotlib.pyplot.title("Month uniq values")
-matplotlib.pyplot.plot_date(dates, list_month_uniq_value, 'g', linestyle="-")
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Month uniq values")
+ax1.plot_date(dates, list_month_uniq_value, 'g', linestyle="-")
+ax2.plot_date(list_price_time, list_price, 'r')
+ax1.set_ylabel("Month uniq value")
+ax2.set_ylabel("Price")
 plt.show()
+
 
 dates = matplotlib.dates.date2num(list_year_time)
 matplotlib.pyplot.title("Year uniq values")
