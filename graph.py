@@ -2,8 +2,7 @@ import mysql.connector
 import matplotlib.pyplot
 import matplotlib.dates
 import matplotlib.pyplot as plt
-from datetime import datetime
-
+from datetime import datetime, timedelta
 
 query = ("SELECT * FROM block order by time")
 try:
@@ -64,6 +63,59 @@ list_price = list()
 for (id, date, price) in cursor:
     list_price_time.append(date)
     list_price.append(price)
+
+averaging_period = 3
+i = 0
+middle_price_time = 0
+middle_price = 0
+list_middle_price_time = list()
+list_middle_price = list()
+for middle in range(0, len(list_price_time)):
+    i += 1
+    middle_price_time = list_price_time[middle]
+    middle_price += list_price[middle]
+    if i == averaging_period:
+        list_middle_price_time.append(middle_price_time - timedelta(days=averaging_period/2))
+        list_middle_price.append(middle_price/averaging_period)
+        i = 0
+        middle_price_time = 0
+        middle_price = 0
+
+# Average per days
+averaging_period = 5
+i = 0
+middle_time = 0
+middle_day_uniq_value = 0
+middle_day_turnover_value = 0
+list_middle_time = list()
+list_middle_day_uniq_value = list()
+list_middle_day_turnover_value = list()
+for middle in range(0, len(list_time)):
+    i += 1
+    middle_time = list_time[middle]
+    middle_day_uniq_value += list_day_uniq_value[middle]
+    middle_day_turnover_value += list_turnover_value[middle]
+    if i == averaging_period:
+        list_middle_time.append(middle_time - timedelta(days=averaging_period/2))
+        list_middle_day_uniq_value.append(middle_day_uniq_value/averaging_period)
+        list_middle_day_turnover_value.append(middle_day_turnover_value/averaging_period)
+        i = 0
+        middle_time = 0
+        middle_day_uniq_value = 0
+        middle_day_turnover_value = 0
+
+
+dates = matplotlib.dates.date2num(list_middle_time)
+dates_price = matplotlib.dates.date2num(list_middle_price_time)
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Day uniq  values")
+ax1.plot_date(dates, list_middle_day_uniq_value, 'g')
+ax2.plot_date(dates_price, list_middle_price, 'r')
+ax1.set_ylabel("Uniq Green")
+ax2.set_ylabel("Price")
+# matplotlib.pyplot.yscale("log")
+plt.show()
 
 dates = matplotlib.dates.date2num(list_time)
 fig, ax1 = plt.subplots()
