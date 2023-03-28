@@ -18,6 +18,9 @@ def handle_tx(tx_id):
             tx_vout = vin['vout']
             if bc.get_tx_date(prev_tx).date() != tx_date.date():
                 day_uniq_value += prev_tx['vout'][tx_vout]['value']
+                print(bc.get_tx_date(prev_tx).date())
+                print(tx_date.date())
+                print(type(tx_date.date()))
                 if bc.get_tx_date(prev_tx).month != tx_date.month or bc.get_tx_date(prev_tx).year != tx_date.year:
                     month_uniq_value += prev_tx['vout'][tx_vout]['value']
                     if bc.get_tx_date(prev_tx).year != tx_date.year:
@@ -39,14 +42,17 @@ if __name__ == '__main__':
 
     for block_height in range(start_block, end_block - 1, -1):
         # Check if block have handled
-        try:
-            cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
-            cursor = cnx.cursor(buffered=True)
-            cursor.execute(query, (str(block_height),))
-            if cursor.rowcount > 0:
-                continue
-        except mysql.connector.Error as err:
-            print("Something went wrong: {}".format(err))
+        for _ in range(0, 1000):
+            try:
+                cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
+                cursor = cnx.cursor(buffered=True)
+                cursor.execute(query, (str(block_height),))
+                if cursor.rowcount > 0:
+                    continue
+            except mysql.connector.Error as err:
+                print("Something went wrong: {}".format(err))
+            else:
+                break
 
         block = bc.get_block(block_height)
         block_date = bc.get_block_date(block)
@@ -73,7 +79,7 @@ if __name__ == '__main__':
             collect_turnover_value += turnover_value
 
         # Save block data
-        for _ in range(0, 10):
+        for _ in range(0, 1000):
             try:
                 cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
                 cursor = cnx.cursor(buffered=True)
