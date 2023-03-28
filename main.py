@@ -47,12 +47,12 @@ if __name__ == '__main__':
                 cnx = mysql.connector.connect(user='emailamuli_bc', password='8j$7HRT4GJC7ZB4P', host='77.222.61.40', database='emailamuli_bc')
                 cursor = cnx.cursor(buffered=True)
                 cursor.execute(query, (str(block_height),))
-                if cursor.rowcount > 0:
-                    continue
             except mysql.connector.Error as err:
                 print("Something went wrong: {}".format(err))
             else:
                 break
+        if cursor.rowcount > 0:
+            continue
 
         block = bc.get_block(block_height)
         block_date = bc.get_block_date(block)
