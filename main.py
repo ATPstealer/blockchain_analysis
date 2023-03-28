@@ -18,7 +18,7 @@ def handle_tx(tx_id):
             tx_vout = vin['vout']
             if bc.get_tx_date(prev_tx).date() != tx_date.date():
                 day_uniq_value += prev_tx['vout'][tx_vout]['value']
-                if bc.get_tx_date(prev_tx).month != tx_date.month and bc.get_tx_date(prev_tx).year != tx_date.year:
+                if bc.get_tx_date(prev_tx).month != tx_date.month or bc.get_tx_date(prev_tx).year != tx_date.year:
                     month_uniq_value += prev_tx['vout'][tx_vout]['value']
                     if bc.get_tx_date(prev_tx).year != tx_date.year:
                         year_uniq_value += prev_tx['vout'][tx_vout]['value']

@@ -82,7 +82,7 @@ for middle in range(0, len(list_price_time)):
         middle_price = 0
 
 # Average per days
-averaging_period = 5
+averaging_period = 11
 i = 0
 middle_time = 0
 middle_day_uniq_value = 0
