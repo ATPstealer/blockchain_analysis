@@ -2,6 +2,7 @@ import datetime
 from include.bc import BC
 import multiprocessing
 import mysql.connector
+import time
 
 
 def handle_tx(tx_id):
@@ -49,6 +50,7 @@ if __name__ == '__main__':
                 cursor.execute(query, (str(block_height),))
             except mysql.connector.Error as err:
                 print("Something went wrong: {}".format(err))
+                time.sleep(_)
             else:
                 break
         if cursor.rowcount > 0:
@@ -92,7 +94,7 @@ if __name__ == '__main__':
                 cnx.close()
             except mysql.connector.Error as err:
                 print("Something went wrong: {}".format(err))
-                continue
+                time.sleep(_)
             else:
                 break
 
