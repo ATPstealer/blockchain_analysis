@@ -18,6 +18,9 @@ list_time = list()
 list_day_uniq_value = list()
 list_turnover_value = list()
 
+list_week_time = list()
+list_week_uniq_value = list()
+
 list_month_time = list()
 list_month_uniq_value = list()
 
@@ -25,7 +28,7 @@ list_year_time = list()
 list_year_uniq_value = list()
 
 
-for (id, block_height, time, day_uniq_value, month_uniq_value, year_uniq_value, turnover_value) in cursor:
+for (id, block_height, time, day_uniq_value, week_uniq_value, month_uniq_value, year_uniq_value, turnover_value) in cursor:
     if time.date() not in list_time:
         list_time.append(time.date())
         list_day_uniq_value.append(0.0)
@@ -33,6 +36,12 @@ for (id, block_height, time, day_uniq_value, month_uniq_value, year_uniq_value, 
     index = list_time.index(time.date())
     list_day_uniq_value[index] += day_uniq_value
     list_turnover_value[index] += turnover_value
+
+    if time.date() not in list_week_time:
+        list_week_time.append(time.date())
+        list_week_uniq_value.append(0.0)
+    index = list_week_time.index(time.date())
+    list_week_uniq_value[index] += week_uniq_value
 
     month = datetime.strptime(str(time.year) + "-" + str(time.month) + "-15 12:00:00", '%Y-%m-%d %H:%M:%S')
     if month not in list_month_time:
@@ -147,6 +156,17 @@ ax2.plot_date(list_price_time, list_price, 'r')
 ax1.set_ylabel("Month uniq value")
 ax2.set_ylabel("Price")
 plt.show()
+
+dates = matplotlib.dates.date2num(list_week_time)
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Week uniq values")
+ax1.plot_date(dates, list_week_uniq_value, 'g', linestyle="-")
+ax2.plot_date(list_price_time, list_price, 'r')
+ax1.set_ylabel("Week uniq value")
+ax2.set_ylabel("Price")
+plt.show()
+
 
 
 dates = matplotlib.dates.date2num(list_year_time)
