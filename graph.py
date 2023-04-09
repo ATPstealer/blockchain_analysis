@@ -37,10 +37,11 @@ for (id, block_height, time, day_uniq_value, week_uniq_value, month_uniq_value, 
     list_day_uniq_value[index] += day_uniq_value
     list_turnover_value[index] += turnover_value
 
-    if time.date() not in list_week_time:
-        list_week_time.append(time.date())
+    week = time.date() + timedelta(days=3-time.weekday())
+    if week not in list_week_time:
+        list_week_time.append(week)
         list_week_uniq_value.append(0.0)
-    index = list_week_time.index(time.date())
+    index = list_week_time.index(week)
     list_week_uniq_value[index] += week_uniq_value
 
     month = datetime.strptime(str(time.year) + "-" + str(time.month) + "-15 12:00:00", '%Y-%m-%d %H:%M:%S')
@@ -91,7 +92,7 @@ for middle in range(0, len(list_price_time)):
         middle_price = 0
 
 # Average per days
-averaging_period = 11
+averaging_period = 7
 i = 0
 middle_time = 0
 middle_day_uniq_value = 0
