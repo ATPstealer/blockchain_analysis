@@ -114,12 +114,43 @@ for middle in range(0, len(list_time)):
         middle_day_uniq_value = 0
         middle_day_turnover_value = 0
 
+# Middle line
+day_middle = 0.0
+count = 0
+for price in list_day_uniq_value:
+    day_middle += price
+    count += 1
+day_middle /= count
 
+week_middle = 0.0
+count = 0
+for price in list_week_uniq_value:
+    week_middle += price
+    count += 1
+week_middle /= count
+
+month_middle = 0.0
+count = 0
+for price in list_month_uniq_value:
+    month_middle += price
+    count += 1
+month_middle /= count
+
+year_middle = 0.0
+count = 0
+for price in list_year_uniq_value:
+    year_middle += price
+    count += 1
+year_middle /= count
+
+
+# Plot
 dates = matplotlib.dates.date2num(list_middle_time)
 dates_price = matplotlib.dates.date2num(list_middle_price_time)
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
 plt.title("Day uniq  values")
+ax1.axhline(y=day_middle)
 ax1.plot_date(dates, list_middle_day_uniq_value, 'g')
 ax2.plot_date(dates_price, list_middle_price, 'r')
 ax1.set_ylabel("Uniq Green")
@@ -131,6 +162,7 @@ dates = matplotlib.dates.date2num(list_time)
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
 plt.title("Day uniq  values")
+ax1.axhline(y=day_middle)
 ax1.plot_date(dates, list_day_uniq_value, markersize=1, color="green")
 ax2.plot_date(list_price_time, list_price, 'r')
 ax1.set_ylabel("Uniq Green")
@@ -148,20 +180,11 @@ ax1.set_ylabel("Turnover green points")
 ax2.set_ylabel("Price")
 plt.show()
 
-dates = matplotlib.dates.date2num(list_month_time)
-fig, ax1 = plt.subplots()
-ax2 = ax1.twinx()
-plt.title("Month uniq values")
-ax1.plot_date(dates, list_month_uniq_value, 'g', linestyle="-")
-ax2.plot_date(list_price_time, list_price, 'r')
-ax1.set_ylabel("Month uniq value")
-ax2.set_ylabel("Price")
-plt.show()
-
 dates = matplotlib.dates.date2num(list_week_time)
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
 plt.title("Week uniq values")
+ax1.axhline(y=week_middle)
 ax1.plot_date(dates, list_week_uniq_value, 'g', linestyle="-")
 ax2.plot_date(list_price_time, list_price, 'r')
 ax1.set_ylabel("Week uniq value")
@@ -169,8 +192,24 @@ ax2.set_ylabel("Price")
 plt.show()
 
 
+dates = matplotlib.dates.date2num(list_month_time)
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Month uniq values")
+ax1.axhline(y=month_middle)
+ax1.plot_date(dates, list_month_uniq_value, 'g', linestyle="-")
+ax2.plot_date(list_price_time, list_price, 'r')
+ax1.set_ylabel("Month uniq value")
+ax2.set_ylabel("Price")
+plt.show()
 
 dates = matplotlib.dates.date2num(list_year_time)
-matplotlib.pyplot.title("Year uniq values")
-matplotlib.pyplot.plot_date(dates, list_year_uniq_value, 'g', linestyle="-")
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Year uniq values")
+ax1.axhline(y=year_middle)
+ax1.plot_date(dates, list_year_uniq_value, 'g', linestyle="-")
+ax2.plot_date(list_price_time, list_price, 'r')
+ax1.set_ylabel("Year uniq value")
+ax2.set_ylabel("Price")
 plt.show()
