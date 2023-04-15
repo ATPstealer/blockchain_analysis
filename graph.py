@@ -58,10 +58,6 @@ for (id, block_height, time, day_uniq_value, week_uniq_value, month_uniq_value, 
     index = list_year_time.index(year)
     list_year_uniq_value[index] += year_uniq_value
 
-for index in range(0, len(list_day_uniq_value)):
-    if list_day_uniq_value[index] > 40000000:
-        print(str(list_time[index]) + " " + str(list_day_uniq_value[index]))
-
 query = ("SELECT * FROM price order by date")
 try:
     cursor.execute(query, ())
@@ -74,7 +70,23 @@ for (id, date, price) in cursor:
     list_price_time.append(date)
     list_price.append(price)
 
-averaging_period = 3
+# Middle price
+list_price_month_time = list()
+list_price_month_count = list()
+list_price_month = list()
+for price, time in zip(list_price, list_price_time):
+    month = datetime.strptime(str(time.year) + "-" + str(time.month) + "-15 12:00:00", '%Y-%m-%d %H:%M:%S')
+    if month not in list_price_month_time:
+         list_price_month_time.append(month)
+         list_price_month.append(0.0)
+         list_price_month_count.append(0)
+    index = list_price_month_time.index(month)
+    list_price_month[index] += price
+    list_price_month_count[index] += 1
+list_price_month_value = [i / j for i, j in zip(list_price_month, list_price_month_count)]
+
+
+averaging_period = 7
 i = 0
 middle_price_time = 0
 middle_price = 0
@@ -92,7 +104,7 @@ for middle in range(0, len(list_price_time)):
         middle_price = 0
 
 # Average per days
-averaging_period = 7
+averaging_period = 5
 i = 0
 middle_time = 0
 middle_day_uniq_value = 0
@@ -143,8 +155,30 @@ for price in list_year_uniq_value:
     count += 1
 year_middle /= count
 
+# Capital
+list_capital = list()
+list_capital_time = list()
+for time in list_price_month_time:
+    if time in list_month_time:
+        list_capital_time.append(time)
+        index_1 = list_month_time.index(time)
+        index_2 = list_price_month_time.index(time)
+        print(list_month_uniq_value[index_1], list_price_month[index_2])
+        list_capital.append(list_month_uniq_value[index_1]*list_price_month[index_2])
 
 # Plot
+dates = matplotlib.dates.date2num(list_capital_time)
+dates_price = matplotlib.dates.date2num(list_middle_price_time)
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+plt.title("Capital $ values")
+ax2.plot_date(dates, list_capital, 'g')
+ax1.plot_date(dates_price, list_middle_price, 'r')
+ax2.set_ylabel("Capital $")
+ax1.set_ylabel("Price")
+# matplotlib.pyplot.yscale("log")
+plt.show()
+
 dates = matplotlib.dates.date2num(list_middle_time)
 dates_price = matplotlib.dates.date2num(list_middle_price_time)
 fig, ax1 = plt.subplots()
